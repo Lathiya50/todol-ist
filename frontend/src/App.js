@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="container">
       <Link to="/" className="title text-decoration-none">
-        <h1> MERN-Stack Todo App</h1>
+        <h1>Todo App</h1>
       </Link>
       <Routes>
         <Route path="/" element={<TodosList />} />

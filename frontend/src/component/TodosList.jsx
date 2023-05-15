@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
+import { DataGrid } from "@mui/x-data-grid";
 function TodosList() {
   const [todoList, setTodoList] = useState([]);
   const navigate = useNavigate();
-
   const getTodoList = async () => {
     const res = await axios.get("http://localhost:4000/todos");
-    if (res) setTodoList(res.data);
-    else console.log("something went wrong!");
+    if (res) {
+      const result = res?.data?.map((res) => {
+        return { id: res._id, ...res };
+      });
+      setTodoList(result);
+    } else console.log("something went wrong!");
   };
 
   const DeleteTodo = async (id) => {
@@ -24,9 +27,40 @@ function TodosList() {
     getTodoList();
   }, []);
 
+  const columns = [
+    { field: "id", headerName: "ID", width: 150 },
+    { field: "todo_description", headerName: "Description", width: 250 },
+    { field: "todo_responsible", headerName: "Responsible", width: 350 },
+    { field: "todo_priority", headerName: "Priority", width: 100 },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 400,
+      renderCell: (params) => {
+        return (
+          <>
+            <Link
+              className="btn btn-sm btn-success text-decoration-none"
+              to={"/edit/" + params.id}
+            >
+              Edit
+            </Link>{" "}
+            <Link
+              className="btn btn-sm btn-danger text-decoration-none"
+              style={{ marginLeft: "20px" }}
+              onClick={(e) => DeleteTodo(params.id)}
+            >
+              Delete
+            </Link>
+          </>
+        );
+      },
+    },
+  ];
+
   return (
     <div>
-      <div className="row">
+      <div className="row mb-4">
         <h3>Todos List</h3>
         <button
           type="button"
@@ -36,53 +70,17 @@ function TodosList() {
           Add Todo
         </button>
       </div>
-
-      <table className="table table-striped" style={{ marginTop: 20 }}>
-        <thead>
-          <tr>
-            <th>Description</th>
-            <th>Responsible</th>
-            <th>Priority</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {todoList.length > 0 ? (
-            todoList.map((list, index) => {
-              return (
-                <tr key={index}>
-                  <td className={list.todo_completed ? "completed" : ""}>
-                    {list.todo_description}
-                  </td>
-                  <td className={list.todo_completed ? "completed" : ""}>
-                    {list.todo_responsible}
-                  </td>
-                  <td className={list.todo_completed ? "completed" : ""}>
-                    {list.todo_priority}
-                  </td>
-                  <td>
-                    <Link
-                      className="btn btn-sm btn-success text-decoration-none"
-                      to={"/edit/" + list._id}
-                    >
-                      Edit
-                    </Link>{" "}
-                    <Link
-                      className="btn btn-sm btn-danger text-decoration-none"
-                      style={{ marginLeft: "20px" }}
-                      onClick={() => DeleteTodo(list._id)}
-                    >
-                      Delete
-                    </Link>
-                  </td>
-                </tr>
-              );
-            })
-          ) : (
-            <h1>Data Not Found</h1>
-          )}
-        </tbody>
-      </table>
+      <div style={{ height: 300, width: "100%" }}>
+        <DataGrid
+          rows={todoList}
+          columns={columns}
+          sx={{
+            "& .MuiDataGrid-virtualScroller": {
+              overflow: "hidden",
+            },
+          }}
+        />
+      </div>
     </div>
   );
 }

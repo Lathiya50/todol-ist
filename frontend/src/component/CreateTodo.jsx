@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
+
 function CreateTodo() {
   const navigate = useNavigate();
   const [state, setState] = useState({
@@ -31,10 +31,9 @@ function CreateTodo() {
           todo_priority: "",
           todo_completed: false,
         });
-        toast.success("Successfully Create todo");
         navigate("/");
       } else {
-        toast.error("Something went wrong!");
+        console.log("Something went wrong!");
       }
     }
   };

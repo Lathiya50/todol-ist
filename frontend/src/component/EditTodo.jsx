@@ -9,7 +9,6 @@ function EditTodo() {
     todo_description: "",
     todo_responsible: "",
     todo_priority: "",
-    todo_completed: false,
   });
   const getTodoList = async () => {
     const res = await axios.get("http://localhost:4000/todos/" + id);
@@ -18,7 +17,6 @@ function EditTodo() {
         todo_description: res.data.todo_description,
         todo_responsible: res.data.todo_responsible,
         todo_priority: res.data.todo_priority,
-        todo_completed: res.data.todo_completed,
       });
     } else console.log("something went wrong!");
   };
@@ -46,7 +44,6 @@ function EditTodo() {
           todo_description: "",
           todo_responsible: "",
           todo_priority: "",
-          todo_completed: false,
         });
         navigate("/");
       } else {

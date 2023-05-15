@@ -8,7 +8,6 @@ function CreateTodo() {
     todo_description: "",
     todo_responsible: "",
     todo_priority: "",
-    todo_completed: false,
   });
   const onChangeHadler = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
@@ -29,7 +28,6 @@ function CreateTodo() {
           todo_description: "",
           todo_responsible: "",
           todo_priority: "",
-          todo_completed: false,
         });
         navigate("/");
       } else {
